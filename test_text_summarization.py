@@ -13,6 +13,16 @@ prompt_templates = {
     "PAGnol": "{} Summary: ",
 }
 
+MAX_LENGHT_TOKENIZER = 1024
+
+def process_for_output_exceed_max_length(beam_output, tokenizer):
+    # Chunk the output into smaller pieces and decode
+    outputs = []
+    for i in range(0, len(beam_output), MAX_LENGHT_TOKENIZER):
+        outputs.append(tokenizer.decode(beam_output[i:i+MAX_LENGHT_TOKENIZER], skip_special_tokens=True))
+
+    return " ".join(outputs)
+
 def generate_summary(text: pd.core.series.Series, model, tokenizer, prompt_template):
     model.eval()
     summaries = []
@@ -20,6 +30,7 @@ def generate_summary(text: pd.core.series.Series, model, tokenizer, prompt_templ
     for idx, row in text.items():
         prompt = prompt_template.format(row)
         input_ids = tokenizer.encode(prompt, return_tensors='pt')
+        print("input length: ", len(input_ids[0]))
         beam_outputs = model.generate(
             input_ids, 
             # max_length=100,
@@ -29,10 +40,15 @@ def generate_summary(text: pd.core.series.Series, model, tokenizer, prompt_templ
             top_p=0.95, 
             num_return_sequences=1
         )
-        nl_output = tokenizer.decode(beam_outputs[0], skip_special_tokens=True)
+
+        print("output length: ", len(beam_outputs[0]))
+        if len(beam_outputs[0]) > MAX_LENGHT_TOKENIZER:
+            nl_output = process_for_output_exceed_max_length(beam_outputs[0], tokenizer)
+        else:
+            nl_output = tokenizer.decode(beam_outputs[0], skip_special_tokens=True)
         time_elapsed = round((time.time() - x)/60, 3)
-        print("Processing row: ", idx + 1, "time elapsed: ", time_elapsed)
-        summaries.append([idx, nl])
+        print("Processing row: ", idx + 1, "time elapsed: ", time_elapsed, "minutes")
+        summaries.append([idx, nl_output])
     return summaries
 
 def evaluate_summaries(summaries: pd.core.series.Series, titles: pd.core.series.Series, scorer: rouge_scorer.RougeScorer):
