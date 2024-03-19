@@ -1,4 +1,4 @@
-data/*
+
 results/*
 results_test/*
 results_valid/*
@@ -6,4 +6,4 @@ papers/*
 
 *.pdf
 *.csv
-
+*.zip
