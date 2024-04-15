@@ -1,0 +1,1 @@
+CUDA_VISIBLE_DEVICES=1 python train_t5_use_ab_sum_data.py
