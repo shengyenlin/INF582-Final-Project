@@ -1,3 +1,6 @@
+# Introduction
+Title Generation for News Articles represents a practical application of text summarization and consistently at- tracts significant attention within the Natural Language Processing (NLP) community. Recently, the advent of Transformer-based Large Language Models (LLMs) has set new benchmarks for state-of-the-art (SOTA) perfor- mance across various generative tasks, including summarization. Nonetheless, despite their remarkable contextual understanding and coherence in generation, LLMs encounter a significant obstacle due to the inherent limitations on the length of input sequences, which means long sequences need to be truncated resulting in a loss of information. This restriction curtails LLMs’ effectiveness and robustness in tasks such as Title Generation for News Articles. In this project, we investigate various LLMs alongside different decoding strategies to assess their advantages and drawbacks in the task of News Article Title Generation. Furthermore, we introduce an extractive method aimed at enhancing the training of LLMs to bolster their resilience in scenarios involving lengthy texts. A meticulously structured ablation study is conducted to demonstrate the effectiveness of our approach.
+
 # This is instruction for our main method with mT5
 (1) Install the libaraies:
 pip install -r requirements.txt
